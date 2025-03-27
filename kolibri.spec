@@ -64,10 +64,14 @@ metadata.entry_points = monkey_patched_entry_points
 
 a = Analysis(
     [os.path.join('src', 'kolibri_app', '__main__.py')],
+    # entry_points=entry_point_packages,
+    ["kolibri.py"],
     pathex=['kolibrisrc', os.path.join('kolibrisrc', 'kolibri', 'dist')],
     binaries=[],
-    datas=[('src/kolibri_app/assets', 'kolibri_app/assets')] + locale_datas,
-    hiddenimports=['_cffi_backend'],
+    #datas=[('src/kolibri_app/assets', 'kolibri_app/assets')] + locale_datas,
+    datas= collect_data_files("kolibri"),
+    hiddenimports= collect_submodules("kolibri"),
+    #hiddenimports=['_cffi_backend'],
     hookspath=['hooks'],
     runtime_hooks=['hooks/pyi_rth_kolibri.py', 'hooks/kolibri_plugins_entrypoints_hook.py'],
     excludes=['numpy', 'six.moves.urllib.parse', 'PIL'],
@@ -98,8 +102,8 @@ exe = EXE(
     target_arch="universal2",
     codesign_identity=os.environ.get("MAC_CODESIGN_ID"),
     entitlements_file="build_config/entitlements.plist",
-    console=False,
-    icon='icons/kolibri.ico'
+    console=False, # <--- This is the line that needs to be changed Set to true if we need to debug 
+    icon='kolibri.ico',
 )
 
 coll = COLLECT(
